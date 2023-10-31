@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+:root {
+  --blue: rgb(180 180 240);
+  --lightest-gray: rgb(240 240 240);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -5,13 +13,71 @@
 }
 
 body {
-  background-color: lime;
+  align-items: center;
+  background-color: rgb(30 30 30);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+nav {
+  display: flex;
+  height: 60px;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+footer {
+  align-items: center;
+  display: flex;
+  font-family: Roboto Mono, monospace;
+  font-size: 0.75rem;
+  justify-content: center;
+  height: 60px;
 }
 
 main {
-  align-items: center;
   display: flex;
-  height: 200px;
-  justify-content: center;
-  width: 200px;
+  max-width: 400px;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+section {
+  height: 400px;
+  min-width: 400px;
+}
+
+section:first-of-type {
+  background-color: blue;
+}
+
+section:nth-of-type(2) {
+  background-color: red;
+}
+
+.nav-button {
+  background-color: var(--lightest-gray);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  transition: background-color 500ms ease, box-shadow 500ms ease;
+  width: 50%;
+}
+
+.nav-button.selected {
+  background-color: white;
+  box-shadow: 0 8px 0 0 var(--blue) inset;
+}
+
+#root {
+  background-color: white;
+  font-family: 'Roboto', sans-serif;
 }
