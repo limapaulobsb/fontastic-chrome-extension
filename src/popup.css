@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 
 :root {
   --blue: rgb(180 180 240);
+  --darker-blue: rgb(90 90 150);
   --lightest-gray: rgb(240 240 240);
 }
 
@@ -21,13 +22,7 @@ body {
   min-height: 100vh;
 }
 
-nav {
-  display: flex;
-  height: 60px;
-}
-
 button {
-  background-color: transparent;
   border: none;
   color: inherit;
   cursor: pointer;
@@ -35,13 +30,63 @@ button {
   font-size: inherit;
 }
 
+fieldset {
+  border: 1px solid var(--lightest-gray);
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
 footer {
   align-items: center;
   display: flex;
   font-family: Roboto Mono, monospace;
   font-size: 0.75rem;
+  height: 80px;
   justify-content: center;
-  height: 60px;
+}
+
+footer > a {
+  height: 40px;
+  width: 200px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+input {
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+input::placeholder {
+  opacity: 0.4;
+  transition: opacity 250ms ease;
+}
+
+input:focus::placeholder {
+  opacity: 0;
+}
+
+label {
+  user-select: none;
+  width: fit-content;
+}
+
+legend {
+  padding: 0 10px;
+}
+
+li {
+  align-items: center;
+  display: flex;
+  height: 50px;
+  padding-left: 20px;
 }
 
 main {
@@ -51,25 +96,87 @@ main {
   scroll-behavior: smooth;
 }
 
+nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 60px;
+}
+
 section {
-  height: 400px;
   min-width: 400px;
+  padding: 0 5px;
 }
 
-section:first-of-type {
-  background-color: blue;
+select {
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
 }
 
-section:nth-of-type(2) {
-  background-color: red;
+ul {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 40px;
+  padding-top: 80px;
+  position: relative;
+}
+
+.default-button {
+  background-color: var(--darker-blue);
+  border-radius: 2px;
+  color: white;
+  height: 40px;
+  padding: 0 20px;
+}
+
+.default-input {
+  font-size: 0.9rem;
+  height: 30px;
+  padding: 0 5px;
+  width: 100px;
+}
+
+.default-select {
+  font-size: 0.9rem;
+  height: 30px;
+  width: 100%;
+}
+
+.horizontal-fieldset > div {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.horizontal-fieldset > div:first-of-type > div {
+  display: flex;
+  flex-grow: 10;
+  justify-content: space-evenly;
+}
+
+.main-input {
+  border: none;
+  border-bottom: 1px solid var(--lightest-gray);
+  font-size: 1.25rem;
+  height: 40px;
+  left: 20px;
+  padding: 0 10px;
+  position: absolute;
+  top: 10px;
+  width: 350px;
 }
 
 .nav-button {
   background-color: var(--lightest-gray);
+  box-shadow: 0 -2px 10px 0 rgb(0 0 0 / 10%) inset;
   font-size: 0.9rem;
   text-transform: uppercase;
   transition: background-color 500ms ease, box-shadow 500ms ease;
-  width: 50%;
 }
 
 .nav-button.selected {
@@ -77,7 +184,28 @@ section:nth-of-type(2) {
   box-shadow: 0 8px 0 0 var(--blue) inset;
 }
 
+.vertical-fieldset > label:nth-last-of-type(2) {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.vertical-fieldset > label:last-of-type {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.vertical-fieldset + label {
+  width: 100%;
+  padding: 0 11px;
+}
+
+#selector-input {
+  width: 180px;
+}
+
 #root {
   background-color: white;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
 }
