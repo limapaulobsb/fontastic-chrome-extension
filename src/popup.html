@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
@@ -17,8 +21,8 @@
             <form id="filter-form">
               <input
                 type="text"
-                name="query"
-                id="query-input"
+                name="name"
+                id="name-input"
                 class="main-input"
                 placeholder="Roboto, Open Sans..."
               />
@@ -77,7 +81,7 @@
                 <label for="language-select">
                   <span>Language:</span>
                   <select name="language" id="language-select" class="default-select">
-                    <option value="all">All languages</option>
+                    <option value="all" selected="selected">All languages</option>
                     <option value="arabic">Arabic</option>
                     <option value="bengali">Bengali</option>
                     <option value="chinese-hongkong">Chinese (Hong Kong)</option>
@@ -95,7 +99,7 @@
                     <option value="kannada">Kannada</option>
                     <option value="khmer">Khmer</option>
                     <option value="korean">Korean</option>
-                    <option value="latin" selected>Latin</option>
+                    <option value="latin">Latin</option>
                     <option value="latin-ext">Latin Extended</option>
                     <option value="malayalam">Malayalam</option>
                     <option value="myanmar">Myanmar</option>
@@ -112,7 +116,7 @@
               <label for="sorting-select">
                 <span>Sort by:</span>
                 <select name="sorting-method" id="sorting-select" class="default-select">
-                  <option value="popularity" selected>Most popular</option>
+                  <option value="popularity" selected="selected">Most popular</option>
                   <option value="alpha">Name</option>
                   <option value="date">Newest</option>
                   <option value="trending">Trending</option>
@@ -120,18 +124,7 @@
               </label>
               <button type="submit" class="default-button">Search</button>
             </form>
-            <ul id="scrollable-list">
-              <li>Roboto</li>
-              <li>Roboto</li>
-              <li>Roboto</li>
-              <li>Roboto</li>
-              <li>Roboto</li>
-              <li>Roboto</li>
-              <li>Roboto</li>
-              <li>Roboto</li>
-              <li>Roboto</li>
-              <li>Roboto</li>
-            </ul>
+            <ul id="scrollable-list"></ul>
           </div>
           <form id="settings-form">
             <fieldset class="horizontal-fieldset">

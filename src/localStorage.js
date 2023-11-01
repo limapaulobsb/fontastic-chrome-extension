@@ -1,0 +1,1 @@
+function addToLocalStorage(key, value) {}
