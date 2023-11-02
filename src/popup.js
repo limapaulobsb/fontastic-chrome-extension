@@ -37,10 +37,11 @@ function filterData(formData) {
     });
 
     //
-    const name = formData.get('name');
+    const query = formData.get('query');
+    const language = formData.get('language');
 
-    if (name) {
-      const re = new RegExp(name, 'i');
+    if (query) {
+      const re = new RegExp(query, 'i');
       criteria &&= re.test(e.family);
     }
 
@@ -48,7 +49,7 @@ function filterData(formData) {
       criteria &&= favorites.have(e.family);
     }
 
-    if (formData.get('language') !== 'all') {
+    if (language !== 'all') {
       criteria &&= e.subsets.includes(language);
     }
 
@@ -61,6 +62,66 @@ function filterData(formData) {
   });
 }
 
+function createIconButton(fontFamily) {
+  // Create icon
+  const newIcon = document.createElement('span');
+  newIcon.className = favorites.have(fontFamily)
+    ? 'material-symbols-outlined filled'
+    : 'material-symbols-outlined';
+  newIcon.innerText = 'favorite';
+
+  // Create button
+  const newIconButton = document.createElement('button');
+  newIconButton.className = 'icon-button';
+  newIconButton.appendChild(newIcon);
+
+  newIconButton.addEventListener('click', () => {
+    const icon = newIconButton.querySelector('span');
+
+    if (!icon.classList.contains('filled')) {
+      icon.classList.add('filled');
+      favorites.add(fontFamily);
+    } else {
+      icon.classList.remove('filled');
+      favorites.remove(fontFamily);
+    }
+  });
+
+  return newIconButton;
+}
+
+function createFontButton(fontFamily) {
+  const newFontButton = document.createElement('button');
+  newFontButton.className = 'font-button';
+  newFontButton.innerText = fontFamily;
+
+  newFontButton.addEventListener('click', () => {
+    if (!newFontButton.classList.contains('selected')) {
+      const selectedButton = scrollableList.querySelector('.selected');
+      selectedButton?.classList.remove('selected');
+      newFontButton.classList.add('selected');
+    }
+  });
+
+  return newFontButton;
+}
+
+function createListItem(fontFamily, fontCategory) {
+  const newListItem = document.createElement('li');
+  newListItem.style.fontFamily = `${fontFamily}, ${fontCategory}`;
+  newListItem.append(createIconButton(fontFamily), createFontButton(fontFamily));
+  scrollableList.appendChild(newListItem);
+
+  // Apply a new observer to change element opacity
+  createObserver(
+    newListItem,
+    (entries) => {
+      entries[0].target.style.opacity = entries[0].intersectionRatio;
+    },
+    buildThresholdList(2)
+  );
+}
+
 function loadFonts(fontFamilies) {
   const baseURL = 'https://fonts.googleapis.com/css?family=';
   const URL = `${baseURL}${fontFamilies.join('|')}&display=swap`;
@@ -71,71 +132,23 @@ function loadFonts(fontFamilies) {
   loadedFonts = [...loadedFonts, ...fontFamilies];
 }
 
-function createListItems(n) {
+function insertItems(n) {
   // Remove the control element, if it exists
   let controlElement = document.getElementById('control');
   controlElement?.remove();
 
-  //
+  // Create items
   const filteredCount = filteredFonts.length;
   const itemCount = () => scrollableList.childElementCount;
   const remainingCount = filteredCount - itemCount();
   const toBeCreated = Math.min(n, remainingCount);
   const familiesToLoad = [];
 
-  // Create items
   for (let i = 0; i < toBeCreated; i++) {
     const fontIndex = itemCount();
     const fontFamily = filteredFonts[fontIndex].family;
     const fontCategory = filteredFonts[fontIndex].category;
-
-    const newIcon = document.createElement('span');
-    newIcon.className = favorites.have(fontFamily)
-      ? 'material-symbols-outlined filled'
-      : 'material-symbols-outlined';
-    newIcon.innerText = 'favorite';
-
-    const newIconButton = document.createElement('button');
-    newIconButton.className = 'icon-button';
-    newIconButton.appendChild(newIcon);
-
-    newIconButton.addEventListener('click', () => {
-      const icon = newIconButton.querySelector('span');
-
-      if (!icon.classList.contains('filled')) {
-        icon.classList.add('filled');
-        favorites.add(fontFamily);
-      } else {
-        icon.classList.remove('filled');
-        favorites.remove(fontFamily);
-      }
-    });
-
-    const newFontButton = document.createElement('button');
-    newFontButton.className = 'font-button';
-    newFontButton.innerText = fontFamily;
-
-    newFontButton.addEventListener('click', () => {
-      if (!newFontButton.classList.contains('selected')) {
-        const selectedButton = scrollableList.querySelector('.selected');
-        selectedButton?.classList.remove('selected');
-        newFontButton.classList.add('selected');
-      }
-    });
-
-    const newListItem = document.createElement('li');
-    newListItem.style.fontFamily = `${fontFamily}, ${fontCategory}`;
-    newListItem.append(newIconButton, newFontButton);
-    scrollableList.appendChild(newListItem);
-
-    // Create an IntersectionObserver to change element opacity
-    createObserver(
-      newListItem,
-      (entries) => {
-        entries[0].target.style.opacity = entries[0].intersectionRatio;
-      },
-      buildThresholdList(2)
-    );
+    createListItem(fontFamily, fontCategory);
 
     if (!loadedFonts.includes(fontFamily)) {
       familiesToLoad.push(fontFamily);
@@ -149,12 +162,12 @@ function createListItems(n) {
     const referenceElement = scrollableList.querySelector('li:nth-last-child(2)');
     scrollableList.insertBefore(controlElement, referenceElement);
 
-    // Create an IntersectionObserver to create the next elements in the list
+    // Apply a new observer to create the next elements in the list
     createObserver(controlElement, (entries) => {
       // If the intersection ratio is 0 or less, the control element is out of
       // view and we don't need to do anything.
       if (entries[0].intersectionRatio <= 0) return;
-      createListItems(10);
+      insertItems(10);
     });
   }
 
@@ -177,11 +190,11 @@ async function createNewList(formData) {
     await getData(selectedMethod);
   }
 
-  // Filter data and create list elements
+  // Filter data and insert list elements
   filterData(formData);
 
   if (filteredFonts.length) {
-    createListItems(20);
+    insertItems(20);
   }
 
   // Scroll to the top

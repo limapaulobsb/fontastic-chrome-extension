@@ -21,67 +21,41 @@
             <form id="filter-form">
               <input
                 type="text"
-                name="name"
-                id="name-input"
+                name="query"
                 class="main-input"
                 placeholder="Roboto, Open Sans..."
               />
               <fieldset class="vertical-fieldset">
                 <legend>Filters</legend>
                 <span>Categories:</span>
-                <label for="display-input">
-                  <input
-                    type="checkbox"
-                    name="display"
-                    id="display-input"
-                    checked="checked"
-                  />
+                <label>
+                  <input type="checkbox" name="display" checked />
                   <span>display</span>
                 </label>
-                <label for="handwriting-input">
-                  <input
-                    type="checkbox"
-                    name="handwriting"
-                    id="handwriting-input"
-                    checked="checked"
-                  />
+                <label>
+                  <input type="checkbox" name="handwriting" checked />
                   <span>handwriting</span>
                 </label>
-                <label for="monospace-input">
-                  <input
-                    type="checkbox"
-                    name="monospace"
-                    id="monospace-input"
-                    checked="checked"
-                  />
+                <label>
+                  <input type="checkbox" name="monospace" checked />
                   <span>monospace</span>
                 </label>
-                <label for="sans-serif-input">
-                  <input
-                    type="checkbox"
-                    name="sans-serif"
-                    id="sans-serif-input"
-                    checked="checked"
-                  />
+                <label>
+                  <input type="checkbox" name="sans-serif" checked />
                   <span>sans-serif</span>
                 </label>
-                <label for="serif-input">
-                  <input
-                    type="checkbox"
-                    name="serif"
-                    id="serif-input"
-                    checked="checked"
-                  />
+                <label>
+                  <input type="checkbox" name="serif" checked />
                   <span>serif</span>
                 </label>
-                <label for="favorites-input">
+                <label>
                   <span>Favorites:</span>
-                  <input type="checkbox" name="favorites" id="favorites-input" />
+                  <input type="checkbox" name="favorites" />
                 </label>
-                <label for="language-select">
+                <label>
                   <span>Language:</span>
-                  <select name="language" id="language-select" class="default-select">
-                    <option value="all" selected="selected">All languages</option>
+                  <select name="language" class="default-select">
+                    <option value="all" selected>All languages</option>
                     <option value="arabic">Arabic</option>
                     <option value="bengali">Bengali</option>
                     <option value="chinese-hongkong">Chinese (Hong Kong)</option>
@@ -113,10 +87,10 @@
                   </select>
                 </label>
               </fieldset>
-              <label for="sorting-select">
+              <label>
                 <span>Sort by:</span>
-                <select name="sorting-method" id="sorting-select" class="default-select">
-                  <option value="popularity" selected="selected">Most popular</option>
+                <select name="sorting-method" class="default-select">
+                  <option value="popularity" selected>Most popular</option>
                   <option value="alpha">Name</option>
                   <option value="date">Newest</option>
                   <option value="trending">Trending</option>
@@ -130,37 +104,30 @@
             <fieldset class="horizontal-fieldset">
               <legend>Settings</legend>
               <div>
-                <label for="size-input">
+                <label>
                   <span>Size:</span>
                   <input
                     type="text"
                     name="size"
-                    id="size-input"
                     class="default-input"
                     placeholder="8px, 1.5em..."
                   />
                 </label>
                 <div>
-                  <label for="bold-input">
-                    <input type="checkbox" name="bold" id="bold-input" />
+                  <label>
+                    <input type="checkbox" name="bold" />
                     <span>Bold</span>
                   </label>
-                  <label for="italic-input">
-                    <input type="checkbox" name="italic" id="italic-input" />
+                  <label>
+                    <input type="checkbox" name="italic" />
                     <span>Italic</span>
                   </label>
                 </div>
               </div>
               <div>
-                <label for="selector-input">
+                <label>
                   <span>CSS Selector:</span>
-                  <input
-                    type="text"
-                    name="selector"
-                    id="selector-input"
-                    class="default-input"
-                    value="*"
-                  />
+                  <input type="text" name="selector" class="default-input" value="*" />
                 </label>
                 <button type="submit" class="default-button">Apply</button>
               </div>
