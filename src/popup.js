@@ -1,4 +1,5 @@
 import api from './api.js';
+import { favorites } from './localStorage.js';
 import createObserver, { buildThresholdList } from './observer.js';
 
 let currentSortingMethod = '';
@@ -37,14 +38,17 @@ function filterData(formData) {
 
     //
     const name = formData.get('name');
-    const language = formData.get('language');
 
     if (name) {
       const re = new RegExp(name, 'i');
       criteria &&= re.test(e.family);
     }
 
-    if (language !== 'all') {
+    if (formData.get('favorites') === 'on') {
+      criteria &&= favorites.have(e.family);
+    }
+
+    if (formData.get('language') !== 'all') {
       criteria &&= e.subsets.includes(language);
     }
 
@@ -85,18 +89,25 @@ function createListItems(n) {
     const fontFamily = filteredFonts[fontIndex].family;
     const fontCategory = filteredFonts[fontIndex].category;
 
-    const newListItem = document.createElement('li');
+    const newIcon = document.createElement('span');
+    newIcon.className = favorites.have(fontFamily)
+      ? 'material-symbols-outlined filled'
+      : 'material-symbols-outlined';
+    newIcon.innerText = 'favorite';
+
     const newIconButton = document.createElement('button');
     newIconButton.className = 'icon-button';
-    newIconButton.innerHTML = '<span class="material-symbols-outlined">favorite</span>';
+    newIconButton.appendChild(newIcon);
 
     newIconButton.addEventListener('click', () => {
       const icon = newIconButton.querySelector('span');
 
-      if (icon.classList.contains('filled')) {
-        icon.classList.remove('filled');
-      } else {
+      if (!icon.classList.contains('filled')) {
         icon.classList.add('filled');
+        favorites.add(fontFamily);
+      } else {
+        icon.classList.remove('filled');
+        favorites.remove(fontFamily);
       }
     });
 
@@ -112,8 +123,9 @@ function createListItems(n) {
       }
     });
 
-    newListItem.append(newIconButton, newFontButton);
+    const newListItem = document.createElement('li');
     newListItem.style.fontFamily = `${fontFamily}, ${fontCategory}`;
+    newListItem.append(newIconButton, newFontButton);
     scrollableList.appendChild(newListItem);
 
     // Create an IntersectionObserver to change element opacity
@@ -169,7 +181,7 @@ async function createNewList(formData) {
   filterData(formData);
 
   if (filteredFonts.length) {
-    createListItems(10);
+    createListItems(20);
   }
 
   // Scroll to the top

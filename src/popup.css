@@ -49,7 +49,7 @@ footer {
   display: flex;
   font-family: 'Roboto Mono', monospace;
   font-size: 0.75rem;
-  height: 80px;
+  height: 60px;
   justify-content: center;
 }
 
@@ -92,6 +92,7 @@ legend {
 li {
   align-items: center;
   display: flex;
+  gap: 5px;
   padding: 2px 10px 2px 30px;
   transition: opacity 200ms ease;
 }
@@ -110,8 +111,12 @@ nav {
 }
 
 section {
+  display: flex;
+  flex-direction: column;
+  height: 540px;
+  justify-content: space-between;
   min-width: 480px;
-  padding: 0 5px;
+  padding: 0 5px 5px;
 }
 
 select {
@@ -121,15 +126,14 @@ select {
 }
 
 ul {
-  height: 400px;
+  height: 350px;
   overflow-y: scroll;
 }
 
 .columns {
   display: grid;
   grid-template-columns: 190px 280px;
-  margin-bottom: 40px;
-  padding-top: 80px;
+  padding-top: 60px;
   position: relative;
 }
 
@@ -172,6 +176,10 @@ ul {
   background-color: var(--lightest-blue);
 }
 
+.horizontal-fieldset {
+  gap: 5px;
+}
+
 .horizontal-fieldset > div {
   align-items: center;
   display: flex;
@@ -187,7 +195,6 @@ ul {
 .icon-button {
   background-color: transparent;
   height: 16px;
-  margin-right: 5px;
   width: 16px;
 }
 
@@ -245,24 +252,19 @@ ul {
 }
 
 .vertical-fieldset + label {
-  width: 100%;
   padding: 0 11px;
+  width: 100%;
 }
 
 .vertical-fieldset > label:nth-last-of-type(2) {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
-  width: 100%;
-}
-
-.vertical-fieldset > label:last-of-type {
-  margin-top: 20px;
+  margin: 10px 0;
   width: 100%;
 }
 
 #selector-input {
-  width: 180px;
+  width: 200px;
 }
 
 #root {
