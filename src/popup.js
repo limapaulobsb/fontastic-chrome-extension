@@ -44,7 +44,7 @@ function filterData(formData) {
     const languageValue = formData.get('language');
 
     if (queryValue) {
-      const re = new RegExp(query, 'i');
+      const re = new RegExp(queryValue, 'i');
       criteria &&= re.test(e.family);
     }
 
@@ -202,7 +202,7 @@ async function createNewList(formData) {
     selectedFont = { ...filteredFonts[0] };
   } else {
     const newElement = document.createElement('div');
-    newElement.className = 'no-results-container'
+    newElement.className = 'no-results-container';
     newElement.innerText = 'No results';
     scrollableList.appendChild(newElement);
   }

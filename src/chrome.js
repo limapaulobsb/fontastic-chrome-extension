@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 async function getCurrentTabId() {
   const queryOptions = { active: true, lastFocusedWindow: true };
   const [tab] = await chrome.tabs.query(queryOptions);
@@ -25,3 +26,4 @@ async function insertCSS(css) {
 }
 
 export { executeScript, insertCSS };
+/* eslint-enable no-undef */
