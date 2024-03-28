@@ -249,6 +249,13 @@ ul {
   box-shadow: 0 8px 0 0 var(--light-blue) inset;
 }
 
+.no-results-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
 .vertical-fieldset + label {
   padding: 0 11px;
   width: 100%;

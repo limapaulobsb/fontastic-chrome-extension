@@ -173,7 +173,7 @@ function createListItems(n) {
   }
 
   // Load fonts if they are not already loaded
-  if (familiesToLoad.length) {
+  if (familiesToLoad.length > 0) {
     loadFonts(familiesToLoad);
     loadedFonts.push(familiesToLoad);
   }
@@ -195,11 +195,16 @@ async function createNewList(formData) {
   // Filter data and insert list elements
   filterData(formData);
 
-  if (filteredFonts.length) {
+  if (filteredFonts.length > 0) {
     createListItems(20);
     const firstFontButton = scrollableList.querySelector('.font-button');
     firstFontButton.classList.add('selected');
     selectedFont = { ...filteredFonts[0] };
+  } else {
+    const newElement = document.createElement('div');
+    newElement.className = 'no-results-container'
+    newElement.innerText = 'No results';
+    scrollableList.appendChild(newElement);
   }
 
   // Scroll to the top
