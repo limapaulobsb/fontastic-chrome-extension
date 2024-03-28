@@ -1,11 +1,13 @@
 import api from './api.js';
-import { favorites } from './localStorage.js';
+import { executeScript, insertCSS } from './chrome.js';
+import { localFavorites } from './localStorage.js';
 import createObserver, { buildThresholdList } from './observer.js';
 
 let currentSortingMethod = '';
 let data = [];
 let filteredFonts = [];
 let loadedFonts = [];
+let selectedFont = null;
 const categories = ['display', 'handwriting', 'monospace', 'sans-serif', 'serif'];
 const ignoredFonts = ['emoji', 'khitan', 'material'];
 
@@ -37,20 +39,21 @@ function filterData(formData) {
     });
 
     //
-    const query = formData.get('query');
-    const language = formData.get('language');
+    const queryValue = formData.get('query');
+    const favoritesValue = formData.get('favorites');
+    const languageValue = formData.get('language');
 
-    if (query) {
+    if (queryValue) {
       const re = new RegExp(query, 'i');
       criteria &&= re.test(e.family);
     }
 
-    if (formData.get('favorites') === 'on') {
-      criteria &&= favorites.have(e.family);
+    if (favoritesValue === 'on') {
+      criteria &&= localFavorites.have(e.family);
     }
 
-    if (language !== 'all') {
-      criteria &&= e.subsets.includes(language);
+    if (languageValue !== 'all') {
+      criteria &&= e.subsets.includes(languageValue);
     }
 
     ignoredFonts.forEach((s) => {
@@ -65,7 +68,7 @@ function filterData(formData) {
 function createIconButton(fontFamily) {
   // Create icon
   const newIcon = document.createElement('span');
-  newIcon.className = favorites.have(fontFamily)
+  newIcon.className = localFavorites.have(fontFamily)
     ? 'material-symbols-outlined filled'
     : 'material-symbols-outlined';
   newIcon.innerText = 'favorite';
@@ -80,36 +83,37 @@ function createIconButton(fontFamily) {
 
     if (!icon.classList.contains('filled')) {
       icon.classList.add('filled');
-      favorites.add(fontFamily);
+      localFavorites.add(fontFamily);
     } else {
       icon.classList.remove('filled');
-      favorites.remove(fontFamily);
+      localFavorites.remove(fontFamily);
     }
   });
 
   return newIconButton;
 }
 
-function createFontButton(fontFamily) {
+function createFontButton(font) {
   const newFontButton = document.createElement('button');
   newFontButton.className = 'font-button';
-  newFontButton.innerText = fontFamily;
+  newFontButton.innerText = font.family;
+  newFontButton.style.fontFamily = `${font.family}, ${font.category}`;
 
   newFontButton.addEventListener('click', () => {
     if (!newFontButton.classList.contains('selected')) {
       const selectedButton = scrollableList.querySelector('.selected');
-      selectedButton?.classList.remove('selected');
+      selectedButton.classList.remove('selected');
       newFontButton.classList.add('selected');
+      selectedFont = { ...font };
     }
   });
 
   return newFontButton;
 }
 
-function createListItem(fontFamily, fontCategory) {
+function createListItem(font) {
   const newListItem = document.createElement('li');
-  newListItem.style.fontFamily = `${fontFamily}, ${fontCategory}`;
-  newListItem.append(createIconButton(fontFamily), createFontButton(fontFamily));
+  newListItem.append(createIconButton(font.family), createFontButton(font));
   scrollableList.appendChild(newListItem);
 
   // Apply a new observer to change element opacity
@@ -129,10 +133,9 @@ function loadFonts(fontFamilies) {
   newLink.setAttribute('rel', 'stylesheet');
   newLink.setAttribute('href', URL);
   document.querySelector('head').appendChild(newLink);
-  loadedFonts = [...loadedFonts, ...fontFamilies];
 }
 
-function insertItems(n) {
+function createListItems(n) {
   // Remove the control element, if it exists
   let controlElement = document.getElementById('control');
   controlElement?.remove();
@@ -145,13 +148,11 @@ function insertItems(n) {
   const familiesToLoad = [];
 
   for (let i = 0; i < toBeCreated; i++) {
-    const fontIndex = itemCount();
-    const fontFamily = filteredFonts[fontIndex].family;
-    const fontCategory = filteredFonts[fontIndex].category;
-    createListItem(fontFamily, fontCategory);
+    const font = filteredFonts[itemCount()];
+    createListItem(font);
 
-    if (!loadedFonts.includes(fontFamily)) {
-      familiesToLoad.push(fontFamily);
+    if (!loadedFonts.includes(font.family)) {
+      familiesToLoad.push(font.family);
     }
   }
 
@@ -167,13 +168,14 @@ function insertItems(n) {
       // If the intersection ratio is 0 or less, the control element is out of
       // view and we don't need to do anything.
       if (entries[0].intersectionRatio <= 0) return;
-      insertItems(10);
+      createListItems(10);
     });
   }
 
   // Load fonts if they are not already loaded
   if (familiesToLoad.length) {
     loadFonts(familiesToLoad);
+    loadedFonts.push(familiesToLoad);
   }
 }
 
@@ -194,15 +196,31 @@ async function createNewList(formData) {
   filterData(formData);
 
   if (filteredFonts.length) {
-    insertItems(20);
+    createListItems(20);
+    const firstFontButton = scrollableList.querySelector('.font-button');
+    firstFontButton.classList.add('selected');
+    selectedFont = { ...filteredFonts[0] };
   }
 
   // Scroll to the top
   scrollableList.scrollTo(0, 0);
+}
 
-  // const formDataObj = {};
-  // formData.forEach((value, key) => (formDataObj[key] = value));
-  // console.log(formData);
+function generateCss(formData) {
+  const selectorValue = formData.get('selector') || '*';
+  const sizeValue = formData.get('size');
+  const italicValue = formData.get('italic');
+  const boldValue = formData.get('bold');
+
+  let css = `${selectorValue} {\n  font-family: '${selectedFont.family}', ${selectedFont.category};`;
+
+  if (sizeValue) css += `\n  font-size: ${sizeValue};`;
+  if (italicValue === 'on') css += '\n  font-style: italic;';
+  if (boldValue === 'on') css += '\n  font-weight: bold;';
+  css = `${css}\n}`;
+  console.log(css);
+
+  return css;
 }
 
 window.addEventListener('load', async () => {
@@ -210,6 +228,7 @@ window.addEventListener('load', async () => {
   const viewButton = document.getElementById('view-button');
   const codeButton = document.getElementById('code-button');
   const filterForm = document.getElementById('filter-form');
+  const settingsForm = document.getElementById('settings-form');
 
   viewButton.addEventListener('click', () => {
     mainElement.scrollTo(0, 0);
@@ -226,6 +245,12 @@ window.addEventListener('load', async () => {
   filterForm.addEventListener('submit', (event) => {
     event.preventDefault();
     createNewList(new FormData(filterForm));
+  });
+
+  settingsForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    executeScript(loadFonts, selectedFont.family);
+    insertCSS(generateCss(new FormData(settingsForm)));
   });
 
   createNewList(new FormData(filterForm));

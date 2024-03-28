@@ -1,8 +1,9 @@
 {
-  "manifest_version": 3,
   "name": "Font Viewer",
+  "description": "This extension allows you to experiment a wide range of Google Fonts options right in your active tab. Customize and preview typography in real time for an enhanced development experience.",
   "version": "1.0",
-  "description": "",
+  "manifest_version": 3,
+  "permissions": ["scripting", "activeTab"],
   "action": {
     "default_popup": "./src/popup.html"
   },

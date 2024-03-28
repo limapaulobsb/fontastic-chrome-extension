@@ -1,4 +1,4 @@
-const favorites = {
+const localFavorites = {
   have(fontFamily) {
     const array = JSON.parse(localStorage.getItem('favorites')) || [];
     return array.includes(fontFamily);
@@ -23,4 +23,4 @@ const favorites = {
   },
 };
 
-export { favorites };
+export { localFavorites };
