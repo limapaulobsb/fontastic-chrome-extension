@@ -65,7 +65,7 @@ function filterData(formData) {
   });
 }
 
-function createIconButton(fontFamily) {
+function createFavoriteButton(fontFamily) {
   // Create icon
   const newIcon = document.createElement('span');
   newIcon.className = localFavorites.have(fontFamily)
@@ -75,10 +75,11 @@ function createIconButton(fontFamily) {
 
   // Create button
   const newIconButton = document.createElement('button');
-  newIconButton.className = 'icon-button';
+  newIconButton.className = 'favorite-button';
   newIconButton.appendChild(newIcon);
 
-  newIconButton.addEventListener('click', () => {
+  newIconButton.addEventListener('click', (event) => {
+    event.stopPropagation();
     const icon = newIconButton.querySelector('span');
 
     if (!icon.classList.contains('filled')) {
@@ -90,31 +91,44 @@ function createIconButton(fontFamily) {
     }
   });
 
-  return newIconButton;
-}
-
-function createFontButton(font) {
-  const newFontButton = document.createElement('button');
-  newFontButton.className = 'font-button';
-  newFontButton.innerText = font.family;
-  newFontButton.style.fontFamily = `${font.family}, ${font.category}`;
-
-  newFontButton.addEventListener('click', () => {
-    if (!newFontButton.classList.contains('selected')) {
-      const selectedButton = scrollableList.querySelector('.selected');
-      selectedButton.classList.remove('selected');
-      newFontButton.classList.add('selected');
-      selectedFont = { ...font };
+  newIconButton.addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+      event.stopPropagation();
     }
   });
 
-  return newFontButton;
+  return newIconButton;
 }
 
 function createListItem(font) {
   const newListItem = document.createElement('li');
-  newListItem.append(createIconButton(font.family), createFontButton(font));
+  newListItem.role = 'button';
+  newListItem.tabIndex = 0;
+  const newFontButton = document.createElement('span');
+  newFontButton.innerText = font.family;
+  newFontButton.style.fontFamily = `${font.family}, ${font.category}`;
+  newListItem.append(createFavoriteButton(font.family), newFontButton);
   scrollableList.appendChild(newListItem);
+
+  const selectItem = () => {
+    if (!newListItem.classList.contains('selected')) {
+      const selectedItem = scrollableList.querySelector('.selected');
+      selectedItem.classList.remove('selected');
+      newListItem.classList.add('selected');
+      selectedFont = { ...font };
+    }
+  };
+
+  newListItem.addEventListener('click', selectItem);
+
+  newListItem.addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+      selectItem();
+      const settingsForm = document.getElementById('settings-form');
+      const nextInput = settingsForm.querySelector('input');
+      nextInput.focus();
+    }
+  });
 
   // Apply a new observer to change element opacity
   createObserver(
@@ -122,7 +136,7 @@ function createListItem(font) {
     (entries) => {
       entries[0].target.style.opacity = entries[0].intersectionRatio;
     },
-    buildThresholdList(2)
+    buildThresholdList(4)
   );
 }
 
@@ -197,8 +211,8 @@ async function createNewList(formData) {
 
   if (filteredFonts.length > 0) {
     createListItems(20);
-    const firstFontButton = scrollableList.querySelector('.font-button');
-    firstFontButton.classList.add('selected');
+    const firstItem = scrollableList.querySelector('li');
+    firstItem.classList.add('selected');
     selectedFont = { ...filteredFonts[0] };
   } else {
     const noResultsElement = document.createElement('div');
@@ -260,16 +274,22 @@ window.addEventListener('load', async () => {
   const filterForm = document.getElementById('filter-form');
   const settingsForm = document.getElementById('settings-form');
 
+  mainElement.addEventListener('scroll', () => {
+    if (mainElement.scrollLeft === 480) {
+      viewButton.classList.remove('selected');
+      codeButton.classList.add('selected');
+    } else if (mainElement.scrollLeft === 0) {
+      codeButton.classList.remove('selected');
+      viewButton.classList.add('selected');
+    }
+  });
+
   viewButton.addEventListener('click', () => {
     mainElement.scrollTo(0, 0);
-    codeButton.classList.remove('selected');
-    viewButton.classList.add('selected');
   });
 
   codeButton.addEventListener('click', () => {
     mainElement.scrollTo(480, 0);
-    viewButton.classList.remove('selected');
-    codeButton.classList.add('selected');
   });
 
   filterForm.addEventListener('submit', (event) => {
