@@ -1,5 +1,5 @@
 import api from './api.js';
-import { executeScript, insertCSS } from './chrome.js';
+import { executeLoad, insertCSS } from './chrome.js';
 import { localFavorites } from './localStorage.js';
 import createObserver, { buildThresholdList } from './observer.js';
 
@@ -16,7 +16,7 @@ const scrollableList = document.getElementById('scrollable-list');
 async function getData(selectedMethod) {
   // Create loading element
   const loadingElement = document.createElement('div');
-  loadingElement.setAttribute('class', 'loading');
+  loadingElement.className = 'loading';
   scrollableList.appendChild(loadingElement);
 
   // Make the request
@@ -127,11 +127,11 @@ function createListItem(font) {
 }
 
 function loadFonts(fontFamilies) {
-  const baseURL = 'https://fonts.googleapis.com/css?family=';
-  const URL = `${baseURL}${fontFamilies.join('|')}&display=swap`;
+  const baseUrl = 'https://fonts.googleapis.com/css?family=';
+  const url = `${baseUrl}${fontFamilies.join('|')}&display=swap`;
   const newLink = document.createElement('link');
   newLink.setAttribute('rel', 'stylesheet');
-  newLink.setAttribute('href', URL);
+  newLink.setAttribute('href', url);
   document.querySelector('head').appendChild(newLink);
 }
 
@@ -159,7 +159,7 @@ function createListItems(n) {
   // Create control element if list is not fully loaded
   if (itemCount() < filteredCount) {
     controlElement = document.createElement('div');
-    controlElement.setAttribute('id', 'control');
+    controlElement.id = 'control';
     const referenceElement = scrollableList.querySelector('li:nth-last-child(2)');
     scrollableList.insertBefore(controlElement, referenceElement);
 
@@ -201,31 +201,56 @@ async function createNewList(formData) {
     firstFontButton.classList.add('selected');
     selectedFont = { ...filteredFonts[0] };
   } else {
-    const newElement = document.createElement('div');
-    newElement.className = 'no-results-container';
-    newElement.innerText = 'No results';
-    scrollableList.appendChild(newElement);
+    const noResultsElement = document.createElement('div');
+    noResultsElement.className = 'no-results-container';
+    noResultsElement.innerText = 'No results';
+    scrollableList.appendChild(noResultsElement);
   }
 
   // Scroll to the top
   scrollableList.scrollTo(0, 0);
 }
 
-function generateCss(formData) {
+function generateCSS(formData, complete = false) {
   const selectorValue = formData.get('selector') || '*';
   const sizeValue = formData.get('size');
   const italicValue = formData.get('italic');
   const boldValue = formData.get('bold');
 
-  let css = `${selectorValue} {\n  font-family: '${selectedFont.family}', ${selectedFont.category};`;
+  let css = `${selectorValue} {\n  font-family: '${selectedFont.family}';`;
 
-  if (sizeValue) css += `\n  font-size: ${sizeValue};`;
-  if (italicValue === 'on') css += '\n  font-style: italic;';
-  if (boldValue === 'on') css += '\n  font-weight: bold;';
-  css = `${css}\n}`;
-  console.log(css);
+  if (sizeValue !== '') {
+    css += `\n  font-size: ${sizeValue};`;
+  } else if (complete) {
+    css += '\n  font-size: unset;';
+  }
+
+  if (italicValue === 'on') {
+    css += '\n  font-style: italic;';
+  } else if (complete) {
+    css += '\n  font-style: unset;';
+  }
+
+  if (boldValue === 'on') {
+    css += '\n  font-weight: bold;';
+  } else if (complete) {
+    css += '\n  font-weight: unset;';
+  }
+
+  css += '\n}';
 
   return css;
+}
+
+function showCode(css) {
+  const importsElement = document.getElementById('imports-code');
+  const rulesElement = document.getElementById('rules-code');
+  const baseUrl = 'https://fonts.googleapis.com/css2?family=';
+  const fontFamily = selectedFont.family.replaceAll(' ', '+');
+  const importsText = `@import url('${baseUrl}${fontFamily}&display=swap');`;
+  const rulesText = `${css}\n\n`;
+  importsElement.innerText = importsText;
+  rulesElement.innerText = rulesText;
 }
 
 window.addEventListener('load', async () => {
@@ -252,10 +277,12 @@ window.addEventListener('load', async () => {
     createNewList(new FormData(filterForm));
   });
 
-  settingsForm.addEventListener('submit', async (event) => {
+  settingsForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    executeScript(loadFonts, selectedFont.family);
-    insertCSS(generateCss(new FormData(settingsForm)));
+    const formData = new FormData(settingsForm);
+    executeLoad(loadFonts, selectedFont.family);
+    insertCSS(generateCSS(formData, true));
+    showCode(generateCSS(formData).replaceAll(' ', '\u00A0'));
   });
 
   createNewList(new FormData(filterForm));

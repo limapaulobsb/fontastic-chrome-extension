@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
@@ -127,7 +129,12 @@
               <div>
                 <label>
                   <span>CSS Selector:</span>
-                  <input type="text" name="selector" class="default-input" value="*" />
+                  <input
+                    type="text"
+                    name="selector"
+                    class="default-input"
+                    placeholder=".class-name"
+                  />
                 </label>
                 <button type="submit" class="default-button">Apply</button>
               </div>
@@ -135,7 +142,15 @@
           </form>
         </section>
         <section>
-          <div></div>
+          <div class="snippet-container">
+            <span>Imports</span>
+            <code id="imports-code"></code>
+          </div>
+          <div class="snippet-container">
+            <span>Rules</span>
+            <code id="rules-code"></code>
+          </div>
+          <span>* Refresh the page to start over!</span>
           <footer>
             <span>powered by</span>
             <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">

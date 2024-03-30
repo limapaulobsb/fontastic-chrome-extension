@@ -6,7 +6,7 @@ async function getCurrentTabId() {
   return tab.id;
 }
 
-async function executeScript(loadFn, fontFamily) {
+async function executeLoad(loadFn, fontFamily) {
   const tabId = await getCurrentTabId();
 
   await chrome.scripting.executeScript({
@@ -25,5 +25,5 @@ async function insertCSS(css) {
   });
 }
 
-export { executeScript, insertCSS };
+export { executeLoad, insertCSS };
 /* eslint-enable no-undef */

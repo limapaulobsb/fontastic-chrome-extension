@@ -10,6 +10,7 @@
   --lightest-gray: rgb(240 240 240);
   --lighter-gray: rgb(210 210 210);
   --gray: rgb(120 120 120);
+  --darker-gray: rgb(60 60 60);
 }
 
 * {
@@ -31,6 +32,16 @@ button {
   cursor: pointer;
   font-family: inherit;
   font-size: inherit;
+}
+
+code {
+  background-color: var(--lightest-gray);
+  color: var(--darker-gray);
+  display: block;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.75rem;
+  min-height: 120px;
+  padding: 20px;
 }
 
 fieldset {
@@ -159,6 +170,7 @@ ul {
 .font-button {
   background: transparent;
   border-radius: 5px;
+  color: var(--darker-gray);
   height: 40px;
   padding: 0 5px;
   text-align: start;
@@ -256,6 +268,18 @@ ul {
   height: 100%;
 }
 
+.snippet-container:first-child {
+  margin-top: 20px;
+}
+
+.snippet-container + span {
+  color: var(--gray);
+  font-size: 0.75rem;
+  font-style: italic;
+  padding-right: 5px;
+  text-align: right;
+}
+
 .vertical-fieldset + label {
   padding: 0 11px;
   width: 100%;
@@ -266,10 +290,6 @@ ul {
   justify-content: space-between;
   margin: 10px 0;
   width: 100%;
-}
-
-#selector-input {
-  width: 200px;
 }
 
 @keyframes loading {
