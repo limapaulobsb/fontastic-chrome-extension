@@ -145,9 +145,24 @@
         </section>
         <section>
           <div class="snippet-container">
-            <span>CSS Code:</span>
+            <div>
+              <label for="css-radio">
+                <input
+                  type="radio"
+                  name="import-radio"
+                  id="css-radio"
+                  value="css "
+                  checked
+                />
+                <span>CSS</span>
+              </label>
+              <label for="html-radio">
+                <input type="radio" name="import-radio" id="html-radio" value="html" />
+                <span>HTML</span>
+              </label>
+            </div>
             <code></code>
-            <button class="copy-button" title="Copy to clipboard">
+            <button id="copy-button" title="Copy to clipboard">
               <span class="material-symbols-outlined">content_copy</span>
             </button>
           </div>

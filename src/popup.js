@@ -3,6 +3,7 @@ import { executeLoad, insertCSS } from './chrome.js';
 import { localFavorites } from './localStorage.js';
 import createObserver, { buildThresholdList } from './observer.js';
 
+let code = { css: '', html: '' };
 let currentSortingMethod = '';
 let data = [];
 let filteredFonts = [];
@@ -245,7 +246,6 @@ function generateCSS(formData, complete = false) {
   };
 
   const fontCategory = dic[selectedFont.category];
-
   let css = `${selectorValue} {`;
   css += `\n  font-family: '${selectedFont.family}', ${fontCategory};`;
 
@@ -272,12 +272,32 @@ function generateCSS(formData, complete = false) {
   return css;
 }
 
-function showCode(css) {
+function generateCode(css) {
+  let url = 'https://fonts.googleapis.com/css2?family=';
+  url += `${selectedFont.family.replaceAll(' ', '+')}&display=swap`;
+  const cssCode = `@import url('${url}');\n\n${css}`;
+  let htmlCode = '<link rel="preconnect" href="https://fonts.googleapis.com">';
+  htmlCode += '\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
+  htmlCode += `\n<link href="${url}" rel="stylesheet">`;
+  htmlCode += '\n\n<style>';
+  htmlCode += `\n  ${css.replaceAll('\n', '\n  ')}`;
+  htmlCode += '\n</style>';
+
+  return {
+    css: cssCode,
+    html: htmlCode,
+  };
+}
+
+function showCode() {
   const codeElement = document.querySelector('code');
-  const baseUrl = 'https://fonts.googleapis.com/css2?family=';
-  const fontFamily = selectedFont.family.replaceAll(' ', '+');
-  const importsText = `@import url('${baseUrl}${fontFamily}&display=swap');`;
-  codeElement.innerText = `${importsText}\n\n${css.replaceAll(' ', '\u00A0')}`;
+  const cssRadio = document.getElementById('css-radio');
+
+  if (cssRadio.checked) {
+    codeElement.innerText = code.css;
+  } else {
+    codeElement.innerText = code.html;
+  }
 }
 
 window.addEventListener('load', async () => {
@@ -286,7 +306,9 @@ window.addEventListener('load', async () => {
   const codeButton = document.getElementById('code-button');
   const filterForm = document.getElementById('filter-form');
   const settingsForm = document.getElementById('settings-form');
-  const copyButton = document.querySelector('.copy-button');
+  const cssRadio = document.getElementById('css-radio');
+  const htmlRadio = document.getElementById('html-radio');
+  const copyButton = document.getElementById('copy-button');
 
   mainElement.addEventListener('scroll', () => {
     if (mainElement.scrollLeft === 480) {
@@ -316,14 +338,20 @@ window.addEventListener('load', async () => {
   settingsForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const formData = new FormData(settingsForm);
+    const completeCss = generateCSS(formData, true);
+    const css = generateCSS(formData);
+    code = generateCode(css);
     executeLoad(loadFonts, selectedFont.family);
-    insertCSS(generateCSS(formData, true));
-    showCode(generateCSS(formData));
+    insertCSS(completeCss);
+    showCode();
   });
+
+  cssRadio.addEventListener('click', showCode);
+  htmlRadio.addEventListener('click', showCode);
 
   copyButton.addEventListener('click', () => {
     const text = document.querySelector('code').innerText;
-    navigator.clipboard.writeText(text.replaceAll('\u00A0', ' '));
+    navigator.clipboard.writeText(text);
   });
 
   createNewList(new FormData(filterForm));

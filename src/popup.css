@@ -45,6 +45,7 @@ code {
   font-size: 0.75rem;
   min-height: 240px;
   padding: 20px;
+  white-space: pre-wrap;
 }
 
 fieldset {
@@ -83,6 +84,11 @@ input {
   font-size: inherit;
 }
 
+input[type='checkbox'],
+input[type='radio'] {
+  cursor: inherit;
+}
+
 input::placeholder {
   opacity: 0.4;
   transition: opacity 250ms ease;
@@ -93,6 +99,7 @@ input:focus::placeholder {
 }
 
 label {
+  cursor: pointer;
   user-select: none;
   width: fit-content;
 }
@@ -171,21 +178,6 @@ ul {
   position: relative;
 }
 
-.copy-button {
-  background-color: var(--lighter-gray);
-  border-radius: 2px;
-  bottom: 10px;
-  height: 40px;
-  position: absolute;
-  right: 10px;
-  width: 40px;
-}
-
-.copy-button > .material-symbols-outlined {
-  color: var(--gray);
-  font-size: 1rem;
-}
-
 .default-button {
   background-color: var(--dark-blue);
   border-radius: 2px;
@@ -237,7 +229,7 @@ ul {
   justify-content: space-between;
 }
 
-.horizontal-fieldset > div:first-of-type > div {
+.horizontal-fieldset > div > div {
   display: flex;
   flex-grow: 10;
   justify-content: space-evenly;
@@ -297,6 +289,12 @@ ul {
   position: relative;
 }
 
+.snippet-container > div:first-of-type {
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 10px;
+}
+
 .snippet-container + span {
   color: var(--gray);
   font-size: 0.75rem;
@@ -315,6 +313,21 @@ ul {
   justify-content: space-between;
   margin: 10px 0;
   width: 100%;
+}
+
+#copy-button {
+  background-color: var(--lighter-gray);
+  border-radius: 2px;
+  bottom: 10px;
+  height: 40px;
+  position: absolute;
+  right: 10px;
+  width: 40px;
+}
+
+#copy-button > .material-symbols-outlined {
+  color: var(--gray);
+  font-size: 1rem;
 }
 
 @keyframes loading {
