@@ -98,7 +98,9 @@
                   <option value="trending">Trending</option>
                 </select>
               </label>
-              <button type="submit" class="default-button">Search</button>
+              <button type="submit" id="search-button" class="default-button">
+                Search
+              </button>
             </form>
             <ul id="scrollable-list"></ul>
           </div>
@@ -143,14 +145,13 @@
         </section>
         <section>
           <div class="snippet-container">
-            <span>Imports</span>
-            <code id="imports-code"></code>
+            <span>CSS Code:</span>
+            <code></code>
+            <button class="copy-button" title="Copy to clipboard">
+              <span class="material-symbols-outlined">content_copy</span>
+            </button>
           </div>
-          <div class="snippet-container">
-            <span>Rules</span>
-            <code id="rules-code"></code>
-          </div>
-          <span>* Refresh the page to start over!</span>
+          <span>* Refresh the page to start over</span>
           <footer>
             <span>powered by</span>
             <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">

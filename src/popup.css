@@ -43,7 +43,7 @@ code {
   display: block;
   font-family: 'Roboto Mono', monospace;
   font-size: 0.75rem;
-  min-height: 120px;
+  min-height: 240px;
   padding: 20px;
 }
 
@@ -111,7 +111,6 @@ li {
   padding-left: 10px;
   position: relative;
   transition: background-color 500ms ease;
-  transition: opacity 100ms ease;
 }
 
 li:hover {
@@ -146,6 +145,10 @@ section {
   scroll-snap-align: start;
 }
 
+section:last-of-type {
+  justify-content: space-evenly;
+}
+
 select {
   color: inherit;
   font-family: inherit;
@@ -166,6 +169,21 @@ ul {
   grid-template-columns: 190px 280px;
   padding-top: 60px;
   position: relative;
+}
+
+.copy-button {
+  background-color: var(--lighter-gray);
+  border-radius: 2px;
+  bottom: 10px;
+  height: 40px;
+  position: absolute;
+  right: 10px;
+  width: 40px;
+}
+
+.copy-button > .material-symbols-outlined {
+  color: var(--gray);
+  font-size: 1rem;
 }
 
 .default-button {
@@ -275,15 +293,15 @@ ul {
   height: 100%;
 }
 
-.snippet-container:first-child {
-  margin-top: 20px;
+.snippet-container {
+  position: relative;
 }
 
 .snippet-container + span {
   color: var(--gray);
   font-size: 0.75rem;
   font-style: italic;
-  padding-right: 5px;
+  padding-right: 10px;
   text-align: right;
 }
 

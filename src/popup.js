@@ -123,10 +123,15 @@ function createListItem(font) {
 
   newListItem.addEventListener('keyup', (event) => {
     if (event.key === 'Enter') {
-      selectItem();
-      const settingsForm = document.getElementById('settings-form');
-      const nextInput = settingsForm.querySelector('input');
-      nextInput.focus();
+      if (event.shiftKey) {
+        const searchButton = document.getElementById('search-button').focus();
+        searchButton.focus();
+      } else {
+        selectItem();
+        const settingsForm = document.getElementById('settings-form');
+        const nextInput = settingsForm.querySelector('input');
+        nextInput.focus();
+      }
     }
   });
 
@@ -136,7 +141,7 @@ function createListItem(font) {
     (entries) => {
       entries[0].target.style.opacity = entries[0].intersectionRatio;
     },
-    buildThresholdList(4)
+    buildThresholdList(20)
   );
 }
 
@@ -231,7 +236,18 @@ function generateCSS(formData, complete = false) {
   const italicValue = formData.get('italic');
   const boldValue = formData.get('bold');
 
-  let css = `${selectorValue} {\n  font-family: '${selectedFont.family}';`;
+  const dic = {
+    display: 'system-ui',
+    handwriting: 'cursive',
+    monospace: 'monospace',
+    'sans-serif': 'sans-serif',
+    serif: 'serif',
+  };
+
+  const fontCategory = dic[selectedFont.category];
+
+  let css = `${selectorValue} {`;
+  css += `\n  font-family: '${selectedFont.family}', ${fontCategory};`;
 
   if (sizeValue !== '') {
     css += `\n  font-size: ${sizeValue};`;
@@ -257,14 +273,11 @@ function generateCSS(formData, complete = false) {
 }
 
 function showCode(css) {
-  const importsElement = document.getElementById('imports-code');
-  const rulesElement = document.getElementById('rules-code');
+  const codeElement = document.querySelector('code');
   const baseUrl = 'https://fonts.googleapis.com/css2?family=';
   const fontFamily = selectedFont.family.replaceAll(' ', '+');
   const importsText = `@import url('${baseUrl}${fontFamily}&display=swap');`;
-  const rulesText = `${css}\n\n`;
-  importsElement.innerText = importsText;
-  rulesElement.innerText = rulesText;
+  codeElement.innerText = `${importsText}\n\n${css.replaceAll(' ', '\u00A0')}`;
 }
 
 window.addEventListener('load', async () => {
@@ -273,6 +286,7 @@ window.addEventListener('load', async () => {
   const codeButton = document.getElementById('code-button');
   const filterForm = document.getElementById('filter-form');
   const settingsForm = document.getElementById('settings-form');
+  const copyButton = document.querySelector('.copy-button');
 
   mainElement.addEventListener('scroll', () => {
     if (mainElement.scrollLeft === 480) {
@@ -286,10 +300,12 @@ window.addEventListener('load', async () => {
 
   viewButton.addEventListener('click', () => {
     mainElement.scrollTo(0, 0);
+    mainElement.querySelector('.main-input').focus();
   });
 
   codeButton.addEventListener('click', () => {
     mainElement.scrollTo(480, 0);
+    copyButton.focus();
   });
 
   filterForm.addEventListener('submit', (event) => {
@@ -302,7 +318,12 @@ window.addEventListener('load', async () => {
     const formData = new FormData(settingsForm);
     executeLoad(loadFonts, selectedFont.family);
     insertCSS(generateCSS(formData, true));
-    showCode(generateCSS(formData).replaceAll(' ', '\u00A0'));
+    showCode(generateCSS(formData));
+  });
+
+  copyButton.addEventListener('click', () => {
+    const text = document.querySelector('code').innerText;
+    navigator.clipboard.writeText(text.replaceAll('\u00A0', ' '));
   });
 
   createNewList(new FormData(filterForm));
