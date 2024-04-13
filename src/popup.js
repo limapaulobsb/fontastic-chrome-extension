@@ -1,7 +1,7 @@
 import api from './api.js';
 import { executeLoad, insertCSS } from './chrome.js';
 import { localFavorites } from './localStorage.js';
-import createObserver, { buildThresholdList } from './observer.js';
+import createObserver from './observer.js';
 
 let code = { css: '', html: '' };
 let currentSortingMethod = '';
@@ -10,8 +10,16 @@ let filteredFonts = [];
 let loadedFonts = [];
 let selectedFont = null;
 const categories = ['display', 'handwriting', 'monospace', 'sans-serif', 'serif'];
-const ignoredFonts = ['emoji', 'khitan', 'material'];
 
+const fallbackFonts = {
+  display: 'system-ui',
+  handwriting: 'cursive',
+  monospace: 'monospace',
+  'sans-serif': 'sans-serif',
+  serif: 'serif',
+};
+
+const ignoredFonts = ['emoji', 'khitan', 'material'];
 const scrollableList = document.getElementById('scrollable-list');
 
 async function getData(selectedMethod) {
@@ -106,8 +114,9 @@ function createListItem(font) {
   newListItem.role = 'button';
   newListItem.tabIndex = 0;
   const newFontButton = document.createElement('span');
+  const fallbackFont = fallbackFonts[font.category];
   newFontButton.innerText = font.family;
-  newFontButton.style.fontFamily = `${font.family}, ${font.category}`;
+  newFontButton.style.fontFamily = `${font.family}, ${fallbackFont}`;
   newListItem.append(createFavoriteButton(font.family), newFontButton);
   scrollableList.appendChild(newListItem);
 
@@ -227,18 +236,9 @@ function generateCSS(formData, complete = false) {
   const sizeValue = formData.get('size');
   const italicValue = formData.get('italic');
   const boldValue = formData.get('bold');
-
-  const dic = {
-    display: 'system-ui',
-    handwriting: 'cursive',
-    monospace: 'monospace',
-    'sans-serif': 'sans-serif',
-    serif: 'serif',
-  };
-
-  const fontCategory = dic[selectedFont.category];
+  const fallbackFont = fallbackFonts[selectedFont.category];
   let css = `${selectorValue} {`;
-  css += `\n  font-family: '${selectedFont.family}', ${fontCategory};`;
+  css += `\n  font-family: '${selectedFont.family}', ${fallbackFont};`;
 
   if (sizeValue !== '') {
     css += `\n  font-size: ${sizeValue};`;
