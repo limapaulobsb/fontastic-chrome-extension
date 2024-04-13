@@ -43,7 +43,7 @@ code {
   display: block;
   font-family: 'Roboto Mono', monospace;
   font-size: 0.75rem;
-  min-height: 240px;
+  height: 300px;
   padding: 20px;
   white-space: pre-wrap;
 }

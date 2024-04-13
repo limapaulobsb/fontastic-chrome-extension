@@ -135,15 +135,6 @@ function createListItem(font) {
       }
     }
   });
-
-  // Apply a new observer to change element opacity
-  createObserver(
-    newListItem,
-    (entries) => {
-      entries[0].target.style.opacity = entries[0].intersectionRatio;
-    },
-    buildThresholdList(20)
-  );
 }
 
 function loadFonts(fontFamilies) {
