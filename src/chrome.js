@@ -22,6 +22,7 @@ async function insertCSS(css) {
   await chrome.scripting.insertCSS({
     target: { tabId },
     css: css,
+    origin: 'USER',
   });
 }
 

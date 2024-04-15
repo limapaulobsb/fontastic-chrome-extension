@@ -243,19 +243,19 @@ function generateCSS(formData, complete = false) {
   if (sizeValue !== '') {
     css += `\n  font-size: ${sizeValue};`;
   } else if (complete) {
-    css += '\n  font-size: unset;';
+    css += '\n  font-size: revert;';
   }
 
   if (italicValue === 'on') {
     css += '\n  font-style: italic;';
   } else if (complete) {
-    css += '\n  font-style: unset;';
+    css += '\n  font-style: revert;';
   }
 
   if (boldValue === 'on') {
     css += '\n  font-weight: bold;';
   } else if (complete) {
-    css += '\n  font-weight: unset;';
+    css += '\n  font-weight: revert;';
   }
 
   css += '\n}';
