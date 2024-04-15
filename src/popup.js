@@ -134,7 +134,7 @@ function createListItem(font) {
   newListItem.addEventListener('keyup', (event) => {
     if (event.key === 'Enter') {
       if (event.shiftKey) {
-        const searchButton = document.getElementById('search-button').focus();
+        const searchButton = document.getElementById('search-button');
         searchButton.focus();
       } else {
         selectItem();
