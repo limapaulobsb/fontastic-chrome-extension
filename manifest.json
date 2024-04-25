@@ -1,7 +1,7 @@
 {
   "name": "Fontastic - Chrome Extension",
   "description": "Customize and preview a wide range of font options right in your active tab for an enhanced development experience.",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "manifest_version": 3,
   "permissions": ["activeTab", "scripting"],
   "action": {
