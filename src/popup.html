@@ -3,10 +3,174 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <main>Hello, Chrome!</main>
+    <div id="root">
+      <nav>
+        <button type="button" id="view-button" class="nav-button selected">View</button>
+        <button type="button" id="code-button" class="nav-button">Code</button>
+      </nav>
+      <main>
+        <section>
+          <div class="columns">
+            <form id="filter-form">
+              <input
+                type="text"
+                name="query"
+                class="main-input"
+                placeholder="Roboto, Open Sans..."
+              />
+              <fieldset class="vertical-fieldset">
+                <legend>Filters</legend>
+                <span>Categories:</span>
+                <label>
+                  <input type="checkbox" name="display" checked />
+                  <span>display</span>
+                </label>
+                <label>
+                  <input type="checkbox" name="handwriting" checked />
+                  <span>handwriting</span>
+                </label>
+                <label>
+                  <input type="checkbox" name="monospace" checked />
+                  <span>monospace</span>
+                </label>
+                <label>
+                  <input type="checkbox" name="sans-serif" checked />
+                  <span>sans-serif</span>
+                </label>
+                <label>
+                  <input type="checkbox" name="serif" checked />
+                  <span>serif</span>
+                </label>
+                <label>
+                  <span>Favorites:</span>
+                  <input type="checkbox" name="favorites" />
+                </label>
+                <label>
+                  <span>Language:</span>
+                  <select name="language" class="default-select">
+                    <option value="all" selected>All languages</option>
+                    <option value="arabic">Arabic</option>
+                    <option value="bengali">Bengali</option>
+                    <option value="chinese-hongkong">Chinese (Hong Kong)</option>
+                    <option value="chinese-simplified">Chinese (Simplified)</option>
+                    <option value="chinese-traditional">Chinese (Traditional)</option>
+                    <option value="cyrillic">Cyrillic</option>
+                    <option value="cyrillic-ext">Cyrillic Extended</option>
+                    <option value="devanagari">Devanagari</option>
+                    <option value="greek">Greek</option>
+                    <option value="greek-ext">Greek Extended</option>
+                    <option value="gujarati">Gujarati</option>
+                    <option value="gurmukhi">Gurmukhi</option>
+                    <option value="hebrew">Hebrew</option>
+                    <option value="japanese">Japanese</option>
+                    <option value="kannada">Kannada</option>
+                    <option value="khmer">Khmer</option>
+                    <option value="korean">Korean</option>
+                    <option value="latin">Latin</option>
+                    <option value="latin-ext">Latin Extended</option>
+                    <option value="malayalam">Malayalam</option>
+                    <option value="myanmar">Myanmar</option>
+                    <option value="oriya">Oriya</option>
+                    <option value="sinhala">Sinhala</option>
+                    <option value="tamil">Tamil</option>
+                    <option value="telugu">Telugu</option>
+                    <option value="thai">Thai</option>
+                    <option value="tibetan">Tibetan</option>
+                    <option value="vietnamese">Vietnamese</option>
+                  </select>
+                </label>
+              </fieldset>
+              <label>
+                <span>Sort by:</span>
+                <select name="sorting-method" class="default-select">
+                  <option value="popularity" selected>Most popular</option>
+                  <option value="alpha">Name</option>
+                  <option value="date">Newest</option>
+                  <option value="trending">Trending</option>
+                </select>
+              </label>
+              <button type="submit" id="search-button" class="default-button">
+                Search
+              </button>
+            </form>
+            <ul id="scrollable-list"></ul>
+          </div>
+          <form id="settings-form">
+            <fieldset class="horizontal-fieldset">
+              <legend>Settings</legend>
+              <div>
+                <label>
+                  <span>Size:</span>
+                  <input
+                    type="text"
+                    name="size"
+                    class="default-input"
+                    placeholder="20px, 1.5em..."
+                  />
+                </label>
+                <div>
+                  <label>
+                    <input type="checkbox" name="bold" />
+                    <span>Bold</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" name="italic" />
+                    <span>Italic</span>
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label>
+                  <span>CSS Selector:</span>
+                  <input
+                    type="text"
+                    name="selector"
+                    class="default-input"
+                    placeholder=".class-name"
+                  />
+                </label>
+                <button type="submit" class="default-button">Apply</button>
+              </div>
+            </fieldset>
+          </form>
+        </section>
+        <section>
+          <div class="snippet-container">
+            <div>
+              <label for="css-radio">
+                <input
+                  type="radio"
+                  name="import-radio"
+                  id="css-radio"
+                  value="css "
+                  checked
+                />
+                <span>CSS</span>
+              </label>
+              <label for="html-radio">
+                <input type="radio" name="import-radio" id="html-radio" value="html" />
+                <span>HTML</span>
+              </label>
+            </div>
+            <code></code>
+            <button id="copy-button" title="Copy to clipboard">
+              <span class="material-symbols-outlined">content_copy</span>
+            </button>
+            <span id="confirmation-message">Copied!</span>
+          </div>
+          <span>* Refresh the page to start over</span>
+        </section>
+      </main>
+    </div>
     <script type="module" src="popup.js"></script>
   </body>
 </html>
