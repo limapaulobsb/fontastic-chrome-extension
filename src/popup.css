@@ -301,6 +301,24 @@ ul {
   width: 100%;
 }
 
+#confirmation-message {
+  background-color: var(--lightest-blue);
+  bottom: -30px;
+  left: 50%;
+  opacity: 0;
+  padding: 5px 0;
+  position: absolute;
+  text-align: center;
+  transform: translateX(-50%);
+  transition: bottom 500ms ease, opacity 500ms ease;
+  width: 80px;
+}
+
+#confirmation-message.visible {
+  bottom: -40px;
+  opacity: 1;
+}
+
 #copy-button {
   background-color: var(--lighter-gray);
   border-radius: 2px;

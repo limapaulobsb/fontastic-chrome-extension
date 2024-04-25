@@ -346,6 +346,12 @@ window.addEventListener('load', async () => {
   copyButton.addEventListener('click', () => {
     const text = document.querySelector('code').innerText;
     navigator.clipboard.writeText(text);
+    const confirmationMessage = document.getElementById('confirmation-message');
+    confirmationMessage.classList.add('visible');
+
+    setTimeout(() => {
+      confirmationMessage.classList.remove('visible');
+    }, 5000);
   });
 
   queryInput.addEventListener('input', () => createNewList(new FormData(filterForm)));
