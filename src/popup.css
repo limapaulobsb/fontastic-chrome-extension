@@ -167,9 +167,14 @@ ul {
 .default-button {
   background-color: var(--dark-blue);
   border-radius: 2px;
+  box-shadow: 1px 1px 2px 0 rgb(0 0 0 / 40%);
   color: white;
   height: 40px;
   width: 80px;
+}
+
+.default-button:active {
+  box-shadow: 1px 1px 2px 0 rgb(0 0 0 / 40%) inset;
 }
 
 .default-input {
