@@ -19,7 +19,6 @@ const fallbackFonts = {
   serif: 'serif',
 };
 
-const ignoredFonts = ['emoji', 'khitan', 'material'];
 const scrollableList = document.getElementById('scrollable-list');
 
 async function getData(selectedMethod) {
@@ -39,32 +38,35 @@ async function getData(selectedMethod) {
 function filterData(formData) {
   filteredFonts = data.filter((e) => {
     let criteria = false;
+    const queryValue = formData.get('query');
+    const favoritesValue = formData.get('favorites');
+    const languageValue = formData.get('language');
+    const ignoredFonts = ['emoji', 'khitan', 'material'];
 
-    //
+    // Filter by categories
     categories.forEach((category) => {
       if (formData.get(category) === 'on') {
         criteria ||= e.category === category;
       }
     });
 
-    //
-    const queryValue = formData.get('query');
-    const favoritesValue = formData.get('favorites');
-    const languageValue = formData.get('language');
-
-    if (queryValue) {
+    // Filter by name
+    if (queryValue !== '') {
       const re = new RegExp(queryValue, 'i');
       criteria &&= re.test(e.family);
     }
 
+    // Filter by favorites
     if (favoritesValue === 'on') {
       criteria &&= localFavorites.have(e.family);
     }
 
+    // Filter by language
     if (languageValue !== 'all') {
       criteria &&= e.subsets.includes(languageValue);
     }
 
+    // Remove ignored fonts
     ignoredFonts.forEach((s) => {
       const re = new RegExp(s, 'i');
       criteria &&= !re.test(e.family);
@@ -300,6 +302,7 @@ window.addEventListener('load', async () => {
   const cssRadio = document.getElementById('css-radio');
   const htmlRadio = document.getElementById('html-radio');
   const copyButton = document.getElementById('copy-button');
+  const queryInput = filterForm.querySelector('.main-input');
 
   mainElement.addEventListener('scroll', () => {
     if (mainElement.scrollLeft === 480) {
@@ -344,6 +347,8 @@ window.addEventListener('load', async () => {
     const text = document.querySelector('code').innerText;
     navigator.clipboard.writeText(text);
   });
+
+  queryInput.addEventListener('input', () => createNewList(new FormData(filterForm)));
 
   createNewList(new FormData(filterForm));
 });
